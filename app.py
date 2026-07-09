@@ -121,7 +121,7 @@ with st.sidebar:
     st.markdown("---")
     
     st.markdown("### 🤖 ② 移行対象ロボットボリューム")
-    st.caption("移行予定の業務シナリオ（ロボット）のボリュームを設定します。")
+    st.caption("移行予定 of 業務シナリオ（ロボット）のボリュームを設定します。")
     
     high_complexity = st.number_input(
         "高難易度ロボットの数",
@@ -226,28 +226,56 @@ if devs <= 1 and attended <= 2 and unattended == 0 and total_robots <= 3:
     urgency_level = "低"
     urgency_badge = "🟢 低"
     urgency_color = "#10B981" # Green
-    urgency_desc = "現在稼働中のUiPathのライセンス規模および移行対象のロボット台数が少ないため、コスト・管理負荷における移行の緊急度は「低」です。現状の運用を継続してもコスト的負担は小さいですが、将来的な全社展開を見据えて今のうちにPADへの移行ハードルを検証しておくことは有益です。"
+    urgency_desc = f"""
+    現在稼働中のUiPathのライセンス規模および移行対象のロボット台数が少ないため、コストや管理負荷における移行の必要性は「**低**」です。現状の運用を継続してもコスト的負担は小さいですが、将来的な拡張を見据えて今のうちにPADへの移行ロードマップを検証しておくことは有益です。
+    
+    今回の対象には、中難易度ロボットが **{mid_complexity}台**、低難易度ロボットが **{low_complexity}台** 含まれています。これらは比較的シンプルな設計ですが、UiPathとPADの要素認識の違いにより一部エラーが発生する可能性があるため、移行時は簡単な動作チェックを行うのがお勧めです。
+    """
 
 # 2. 緊急: 3年削減額が200万円以上、またはOrchestratorを利用中の場合
 elif diff_3years >= 200.0 or has_orchestrator:
     urgency_level = "緊急"
     urgency_badge = "🔴 緊急"
     urgency_color = "#EF4444" # Red
-    urgency_desc = f"ライセンス削減可能額が極めて大きい（3年間で {diff_3years:,.1f}万円 削減可能）か、高額なOrchestratorを使用しているため、移行の必要性は「緊急」です。毎月の余剰ライセンス維持費が極めて大きいため、早期の移行ロードマップ策定を強く推奨します。"
+    
+    orch_text = "また、現在高額なOrchestratorを使用されているため、スケジュール配信やトリガーの仕組みをPower Automateクラウドフローへ移植するための『管理構造の再設計』が必須となります。" if has_orchestrator else ""
+    
+    urgency_desc = f"""
+    ライセンス削減可能額が極めて大きい（3年間で **{diff_3years:,.1f}万円** のコスト削減余地あり）ため、移行の必要性は「**緊急**」です。毎月の余剰ライセンス維持費のロスが大きいため、早期の移行計画策定を強く推奨します。{orch_text}
+    
+    なお、移行対象に含まれる高難易度ロボット（**{high_complexity}台**）や中難易度ロボット（**{mid_complexity}台**）には、複雑な例外処理ロジックやUiPathの独自アクティビティが多く組み込まれているため、単純コピーでの移行はエラー多発の主因になります。移行後にロボットがフリーズするなどの不具合を防ぐため、事前に専門アーキテクトによる『移行性診断（コードリファクタリング計画）』を強く推奨します。
+    
+    削減される莫大なライセンスコストの一部を移行初期コストに充てることで、実質的な持ち出し（リスク）を最小限に抑えた安全な移行プロジェクトを立ち上げることが可能です。
+    """
 
 # 3. 高: 3年削減額が50万円以上、または高難易度ロボットや無人ロボットが1台以上存在する場合
 elif diff_3years >= 50.0 or high_complexity >= 1 or unattended >= 1:
     urgency_level = "高"
     urgency_badge = "🟠 高"
     urgency_color = "#F59E0B" # Orange
-    urgency_desc = f"無人ロボット（Unattended）の稼働、または高難易度のロボットが存在し、ライセンス費用の削減ポテンシャルが大きいため、移行の必要性は「高」です。費用対効果が非常に高いため、次回のライセンス更新時期に照準を合わせた具体的な移行計画への着手を推奨します。"
+    
+    unattended_text = "無人ロボット（Unattended）が稼働しているため、ライセンス費用の削減ポテンシャルが大きく、PAD移行による恩恵が非常に大きくなります。" if unattended >= 1 else ""
+    
+    urgency_desc = f"""
+    {unattended_text}移行によるランニングコストの削減幅が大きいため、移行の必要性は「**高**」です。次回のライセンス更新時期に合わせて、計画的な移行プロジェクトを本格検討すべき状態です。
+    
+    今回移行対象となる高難易度ロボット（**{high_complexity}台**）および中難易度ロボット（**{mid_complexity}台**）は、複雑な例外処理ロジックやUiPathの独自アクティビティが組み込まれているため、PADへの単純な置き換えだけでは移行後にロボットがフリーズするなどの不具合が起きやすい傾向にあります。
+    
+    そのため、事前に専門アーキテクトによる『移行性診断（コードリファクタリング計画）』を受けることを推奨します。削減される莫大なライセンスコストの一部を移行初期コストに充てることで、実質リスクゼロで安全な移行プロジェクトを推進することが可能です。
+    """
 
 # 4. 中: 上記以外
 else:
     urgency_level = "中"
     urgency_badge = "🔵 中"
     urgency_color = "#3B82F6" # Blue
-    urgency_desc = "ライセンス削減メリットが一定程度見込めるため、移行の必要性は「中」です。差し迫った緊急性はありませんが、更新タイミングに合わせたスムーズな移行に向けて、既存資産の予備診断を進めておくのが適しています。"
+    urgency_desc = f"""
+    ライセンス削減メリットが一定程度見込めるため、移行の必要性は「**中**」です。直ちに移行しない場合も、次回のライセンス更新タイミングに照準を合わせたスムーズな移行に向けて、既存資産の整理や移行の予備診断を進めておくのが適しています。
+    
+    移行対象にロボット（高難易度: **{high_complexity}台**、中難易度: **{mid_complexity}台**）が含まれる場合、UiPathの独自仕様やエラーリカバリ処理が含まれていることが多く、単純置換ではフリーズなどの不具合が発生しやすいため、専門アーキテクトによる『移行性診断（コードリファクタリング計画）』を推奨します。
+    
+    削減されるライセンスコストの一部を移行の初期設計費用に充てることで、リスクを最小限に抑えた安全な移行プロジェクトが実現できます。
+    """
 
 # --- UI Render Logic based on diagnosis state ---
 
@@ -401,18 +429,8 @@ else:
         # Dynamic Badge Header for Migration Necessity
         st.markdown(f"#### 移行の必要性：<span style='color:{urgency_color}; font-weight:850; font-size:1.4rem;'>{urgency_badge}</span>", unsafe_allow_html=True)
         
-        # Display Dynamic Explanation Text
+        # Display Dynamic Explanation Text (integrated warnings and cost-saving tips)
         st.write(urgency_desc)
-        st.markdown("<br>", unsafe_allow_html=True)
-        
-        # Display Technical warnings based on user inputs
-        if has_orchestrator:
-            st.warning("⚡ **Orchestrator（管理サーバー）の移行壁**\n\n現在Orchestratorでスケジュール配信やアセット（ID/Pass）管理を行っている場合、PAD単体では代替できません。Power AutomateクラウドフローやDataverse等を用いた、管理構造自体の再設計が必要です。")
-        
-        if high_complexity > 0 or mid_complexity > 0:
-            st.warning(f"⚡ **ロボット難易度（高: {high_complexity}台、中: {mid_complexity}台）の移行壁**\n\n複雑な例外処理ロジックやUiPathの独自アクティビティは、PADへの単純置換が困難です。移行後にロボットがフリーズするなどの不具合を防ぐため、事前に専門アーキテクトによる『移行性診断（コードリファクタリング計画）』を推奨します。")
-            
-        st.info("💡 **アドバイス**: 削減される莫大なライセンスコストの一部を移行初期コストに充てることで、リスクを最小限に抑えた安全な移行プロジェクトを立ち上げることが可能です。")
 
     # --- Call To Action (Free Paper Download Form) ---
     st.markdown("<div class='cta-card'>", unsafe_allow_html=True)
