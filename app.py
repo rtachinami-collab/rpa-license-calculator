@@ -220,6 +220,35 @@ diff_3years = abs(uipath_total_3years - pa_total_3years)
 diff_3years_yen = diff_3years * 10000
 diff_annual = abs(uipath_annual - pa_annual)
 
+# --- Determine Migration Necessity Level (低・中・高・緊急) ---
+# 1. 低: ライセンス台数が少なく（dev<=1, attended<=2, unattended==0）、かつロボット台数も少ない（<=3）場合
+if devs <= 1 and attended <= 2 and unattended == 0 and total_robots <= 3:
+    urgency_level = "低"
+    urgency_badge = "🟢 低"
+    urgency_color = "#10B981" # Green
+    urgency_desc = "現在稼働中のUiPathのライセンス規模および移行対象のロボット台数が少ないため、コスト・管理負荷における移行の緊急度は「低」です。現状の運用を継続してもコスト的負担は小さいですが、将来的な全社展開を見据えて今のうちにPADへの移行ハードルを検証しておくことは有益です。"
+
+# 2. 緊急: 3年削減額が200万円以上、またはOrchestratorを利用中の場合
+elif diff_3years >= 200.0 or has_orchestrator:
+    urgency_level = "緊急"
+    urgency_badge = "🔴 緊急"
+    urgency_color = "#EF4444" # Red
+    urgency_desc = f"ライセンス削減可能額が極めて大きい（3年間で {diff_3years:,.1f}万円 削減可能）か、高額なOrchestratorを使用しているため、移行の必要性は「緊急」です。毎月の余剰ライセンス維持費が極めて大きいため、早期の移行ロードマップ策定を強く推奨します。"
+
+# 3. 高: 3年削減額が50万円以上、または高難易度ロボットや無人ロボットが1台以上存在する場合
+elif diff_3years >= 50.0 or high_complexity >= 1 or unattended >= 1:
+    urgency_level = "高"
+    urgency_badge = "🟠 高"
+    urgency_color = "#F59E0B" # Orange
+    urgency_desc = f"無人ロボット（Unattended）の稼働、または高難易度のロボットが存在し、ライセンス費用の削減ポテンシャルが大きいため、移行の必要性は「高」です。費用対効果が非常に高いため、次回のライセンス更新時期に照準を合わせた具体的な移行計画への着手を推奨します。"
+
+# 4. 中: 上記以外
+else:
+    urgency_level = "中"
+    urgency_badge = "🔵 中"
+    urgency_color = "#3B82F6" # Blue
+    urgency_desc = "ライセンス削減メリットが一定程度見込めるため、移行の必要性は「中」です。差し迫った緊急性はありませんが、更新タイミングに合わせたスムーズな移行に向けて、既存資産の予備診断を進めておくのが適しています。"
+
 # --- UI Render Logic based on diagnosis state ---
 
 if not st.session_state.diagnosed:
@@ -365,19 +394,18 @@ else:
         
         st.markdown("<br>", unsafe_allow_html=True)
         st.markdown("✅ **年間ライセンス費の大幅削減ポテンシャル**")
-        st.markdown("✅ **OS親和性による開発効率の向上**")
+        st.markdown("✅ **OS親和性による開発効率 of 向上**")
         st.markdown("✅ **Office365クラウド環境との即時連携**")
 
     with col_rec2:
-        st.markdown("#### ⚠️ 移行性シミュレーションと専門家チェックの必要性")
+        # Dynamic Badge Header for Migration Necessity
+        st.markdown(f"#### 移行の必要性：<span style='color:{urgency_color}; font-weight:850; font-size:1.4rem;'>{urgency_badge}</span>", unsafe_allow_html=True)
         
-        st.write(f"""
-        現在稼働中のUiPathから **Power Automate (PAD) への移行** により、3年間で合計 **{diff_3years_yen:,.0f}円** （年間 {diff_annual:.1f}万円）ものライセンスコストを削減できる極めて高い経済効果が見込めます。
+        # Display Dynamic Explanation Text
+        st.write(urgency_desc)
+        st.markdown("<br>", unsafe_allow_html=True)
         
-        しかし、UiPathのロボットプログラムは、単純にコピーするだけではPower Automateで正常動作しません。今回入力された要件においては、以下の**移行障壁（技術的課題）**が存在するため、安定した移行を実現するには**専門家による移行性診断（ソースコード解析）**が不可欠です。
-        """)
-        
-        # Display warnings based on user inputs
+        # Display Technical warnings based on user inputs
         if has_orchestrator:
             st.warning("⚡ **Orchestrator（管理サーバー）の移行壁**\n\n現在Orchestratorでスケジュール配信やアセット（ID/Pass）管理を行っている場合、PAD単体では代替できません。Power AutomateクラウドフローやDataverse等を用いた、管理構造自体の再設計が必要です。")
         
