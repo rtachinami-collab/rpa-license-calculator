@@ -457,7 +457,7 @@ else:
 
     if not st.session_state.download_ready:
         st.markdown("<div class='cta-title'>🎁 PowerAutomate移行ガイドをダウンロード</div>", unsafe_allow_html=True)
-        st.markdown("<div class='cta-subtitle'>簡単な情報を入力するだけで、安全な移行のステップや削減効果の実例をまとめた特別フリーペーパーをお手元に保存できます。</div>", unsafe_allow_html=True)
+        st.markdown("<div class='cta-subtitle'>簡単に移行できるの？リスクは？等気になる疑問を、現役RPAコンサルタントが資料化しました。</div>", unsafe_allow_html=True)
         st.markdown("<br>", unsafe_allow_html=True)
         
         with st.form("download_form"):
