@@ -290,7 +290,7 @@ else:
 if not st.session_state.diagnosed:
     # --- State A: Waiting for Diagnosis Button Click ---
     st.markdown("<br><br>", unsafe_allow_html=True)
-    st.info("💡 **使い方**: 左側のサイドバーで「UiPath稼働規模」および「移行対象ロボット数」を設定し、以下の「診断を実行」ボタンをクリックしてください。")
+    st.info("💡 **使い方**: 左側のサイドバーで「UiPath稼遊規模」および「移行対象ロボット数」を設定し、以下の「診断を実行」ボタンをクリックしてください。")
     
     st.markdown("<br>", unsafe_allow_html=True)
     col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
@@ -442,7 +442,6 @@ else:
 
     # --- Call To Action (Free Paper Download Form) ---
     # 📝 INCLUDED INSIDE ELSE BLOCK to prevent empty border rendering before diagnosis
-    # ❌ Outer div.cta-card removed to resolve HTML parsing bug (replaced by premium button styles)
     
     # Application Form
     if "download_ready" not in st.session_state:
@@ -517,3 +516,15 @@ RPA移行推進チーム 特別編集
             if st.button("↩️ フォームに戻る", use_container_width=True):
                 st.session_state.download_ready = False
                 st.rerun()
+
+# --- Footer Section (Always displayed at the very bottom of the page) ---
+st.markdown("---")
+foot_col1, foot_col2, foot_col3 = st.columns(3)
+with foot_col1:
+    st.markdown("<p style='font-size: 0.85rem; color: #64748B;'>🌐 <b>運営会社</b>: <a href='#'>RPA移行ソリューションズ株式会社</a></p>", unsafe_allow_html=True)
+with foot_col2:
+    st.markdown("<p style='font-size: 0.85rem; color: #64748B; text-align: center;'>🔒 <a href='#'>プライバシーポリシー</a> | 📄 <a href='#'>利用規約</a></p>", unsafe_allow_html=True)
+with foot_col3:
+    st.markdown("<p style='font-size: 0.85rem; color: #64748B; text-align: right;'>✉️ <a href='#'>特定商取引法に基づく表記</a></p>", unsafe_allow_html=True)
+
+st.markdown("<p style='text-align: center; color: #94A3B8; font-size: 0.8rem; margin-top: 1rem; margin-bottom: 2rem;'>© 2026 RPA Migration Support Team. All rights reserved.</p>", unsafe_allow_html=True)
