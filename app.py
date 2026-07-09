@@ -44,19 +44,12 @@ st.markdown("""
         color: #4F46E5;
         margin-top: 0.5rem;
     }
-    /* CTA Card Premium (Thin grey border, elegant and clean) */
-    .cta-card {
-        background: linear-gradient(135deg, rgba(236, 72, 153, 0.03) 0%, rgba(139, 92, 246, 0.03) 100%);
-        border: 1px solid #E2E8F0;
-        border-radius: 16px;
-        padding: 2.5rem;
-        margin-top: 3rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-    }
+    /* CTA Text Headings */
     .cta-title {
         font-size: 1.8rem;
         font-weight: 850;
         color: #1E293B;
+        margin-top: 2.5rem;
         margin-bottom: 0.5rem;
         text-align: center;
     }
@@ -72,6 +65,21 @@ st.markdown("""
         font-size: 1.25rem !important;
         padding: 0.8rem 2.5rem !important;
         transition: all 0.3s ease !important;
+    }
+    /* Premium Gradient Submit & Download Buttons (Highly emphasized, replaces need for outer border) */
+    div.stFormSubmitButton > button, div.stDownloadButton > button {
+        background: linear-gradient(135deg, #EC4899 0%, #8B5CF6 100%) !important;
+        color: white !important;
+        border: none !important;
+        font-weight: 750 !important;
+        padding: 0.7rem 2.5rem !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 15px rgba(236, 72, 153, 0.25) !important;
+        transition: all 0.3s ease !important;
+    }
+    div.stFormSubmitButton > button:hover, div.stDownloadButton > button:hover {
+        box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4) !important;
+        transform: translateY(-1px) !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -241,7 +249,7 @@ elif diff_3years >= 200.0 or has_orchestrator:
     orch_text = "また、現在高額なOrchestratorを使用されているため、スケジュール配信やトリガーの仕組みをPower Automateクラウドフローへ移植するための『管理構造の再設計』が必須となります。" if has_orchestrator else ""
     
     urgency_desc = f"""
-    ライセンス削減可能額が極めて大きい（3年間で **{diff_3years:,.1f}万円** のコスト削減余地あり）ため、移行の必要性は「**緊急**」です。毎月の余剰ライセンス維持費のロスが大きいため、早期 of 移行計画策定を強く推奨します。{orch_text}
+    ライセンス削減可能額が極めて大きい（3年間で **{diff_3years:,.1f}万円** のコスト削減余地あり）ため、移行の必要性は「**緊急**」です。毎月の余剰ライセンス維持費のロスが大きいため、早期の移行計画策定を強く推奨します。{orch_text}
     
     なお、移行対象に含まれる高難易度ロボット（**{high_complexity}台**）や中難易度ロボット（**{mid_complexity}台**）には、複雑な例外処理ロジックやUiPathの独自アクティビティが多く組み込まれているため、単純コピーでの移行はエラー多発の主因になります。移行後にロボットがフリーズするなどの不具合を防ぐため、事前に専門アーキテクトによる『移行性診断（コードリファクタリング計画）』を強く推奨します。
     
@@ -259,7 +267,7 @@ elif diff_3years >= 50.0 or high_complexity >= 1 or unattended >= 1:
     urgency_desc = f"""
     {unattended_text}移行によるランニングコストの削減幅が大きいため、移行の必要性は「**高**」です。次回のライセンス更新時期に合わせて、計画的な移行プロジェクトを本格検討すべき状態です。
     
-    今回移行対象となる高難易度ロボット（**{high_complexity}台**）および中難易度ロボット（**{mid_complexity}台**）は、複雑な例外処理ロジックやUiPath of 独自アクティビティが組み込まれているため、PADへの単純な置き換えだけでは移行後にロボットがフリーズするなどの不具合が起きやすい傾向にあります。
+    今回移行対象となる高難易度ロボット（**{high_complexity}台**）および中難易度ロボット（**{mid_complexity}台**）は、複雑な例外処理ロジックやUiPathの独自アクティビティが組み込まれているため、PADへの単純な置き換えだけでは移行後にロボットがフリーズするなどの不具合が起きやすい傾向にあります。
     
     そのため、事前に専門アーキテクトによる『移行性診断（コードリファクタリング計画）』を受けることを推奨します。削減される莫大なライセンスコストの一部を移行初期コストに充てることで、実質リスクゼロで安全な移行プロジェクトを推進することが可能です。
     """
@@ -433,15 +441,15 @@ else:
         st.write(urgency_desc)
 
     # --- Call To Action (Free Paper Download Form) ---
-    # 📝 INCLUDED INSIDE ELSE BLOCK to prevent empty box displaying before diagnosis
-    st.markdown("<div class='cta-card'>", unsafe_allow_html=True)
-
+    # 📝 INCLUDED INSIDE ELSE BLOCK to prevent empty border rendering before diagnosis
+    # ❌ Outer div.cta-card removed to resolve HTML parsing bug (replaced by premium button styles)
+    
     # Application Form
     if "download_ready" not in st.session_state:
         st.session_state.download_ready = False
 
     if not st.session_state.download_ready:
-        st.markdown("<div class='cta-title'>フリーペーパーをダウンロードする</div>", unsafe_allow_html=True)
+        st.markdown("<div class='cta-title'>🎁 PowerAutomate移行ガイドをダウンロード</div>", unsafe_allow_html=True)
         st.markdown("<div class='cta-subtitle'>UiPathからPower Automateへ安全に移行するためのステップや、失敗しやすいポイント、ライセンスコスト削減効果の実例をまとめた特別フリーペーパーをお届けします。</div>", unsafe_allow_html=True)
         
         with st.form("download_form"):
@@ -454,7 +462,7 @@ else:
                 
             col_b1, col_b2, col_b3 = st.columns([1, 2, 1])
             with col_b2:
-                submit_download = st.form_submit_button("📥 フリーペーパーを無料でダウンロードする", use_container_width=True)
+                submit_download = st.form_submit_button("📥 無料で移行ガイドをダウンロードする", use_container_width=True)
                 
         if submit_download:
             if not company_name or not contact_name or not email:
@@ -466,10 +474,10 @@ else:
         # Success State with active download button
         st.balloons()
         st.markdown("<div class='cta-title'>✅ ご登録ありがとうございました！</div>", unsafe_allow_html=True)
-        st.markdown("<div class='cta-subtitle'>以下ボタンをクリックして、フリーペーパーを保存してください。</div>", unsafe_allow_html=True)
+        st.markdown("<div class='cta-subtitle'>以下ボタンをクリックして、PowerAutomate移行ガイドを保存してください。</div>", unsafe_allow_html=True)
         
         # Construct Guide content dynamically based on parameters
-        guide_content = f"""# UiPath ➔ Power Automate 移行成功ガイドブック
+        guide_content = f"""# Power Automate 移行成功ガイドブック
 RPA移行推進チーム 特別編集
 
 ---
@@ -497,9 +505,9 @@ RPA移行推進チーム 特別編集
         col_d1, col_d2, col_d3 = st.columns([1, 2, 1])
         with col_d2:
             st.download_button(
-                label="📥 ガイドブックをダウンロードする (PDF/TXT形式)",
+                label="📥 PowerAutomate移行ガイドをダウンロード",
                 data=guide_content,
-                file_name="RPA_Migration_Success_Guide.txt",
+                file_name="PowerAutomate_Migration_Guide.txt",
                 mime="text/plain",
                 use_container_width=True
             )
@@ -509,5 +517,3 @@ RPA移行推進チーム 特別編集
             if st.button("↩️ フォームに戻る", use_container_width=True):
                 st.session_state.download_ready = False
                 st.rerun()
-
-    st.markdown("</div>", unsafe_allow_html=True)
