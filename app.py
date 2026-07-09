@@ -98,7 +98,7 @@ with st.sidebar:
         max_value=100,
         value=1,
         step=1,
-        help="シナリオを作成・開発するメンバーの人数です。"
+        help="シナシナリオを作成・開発するメンバーの人数です。"
     )
     
     attended = st.number_input(
@@ -445,11 +445,16 @@ else:
         # Display Dynamic Explanation Text (integrated warnings and cost-saving tips)
         st.write(urgency_desc)
 
-    # --- Empathy Lead Section (New Story transition) ---
+    # --- Empathy Lead Section (New Story transition with illustrator image) ---
     st.markdown("<br><br><br><br><br>", unsafe_allow_html=True)
     
+    # 3-Column layout to center the generated illustrator image
+    img_col1, img_col2, img_col3 = st.columns([2, 1, 2])
+    with img_col2:
+        st.image("assets/worried_businessman.png", use_container_width=True)
+        
     st.markdown(f"""
-    <div style='text-align: center; padding: 2.5rem 0; border-top: 1px solid #F1F5F9; border-bottom: 1px solid #F1F5F9;'>
+    <div style='text-align: center; padding: 1.5rem 0 2.5rem 0; border-bottom: 1px solid #F1F5F9;'>
         <p style='font-size: 1.6rem; font-weight: 800; color: #475569; margin-bottom: 1rem; font-family: "Outfit", "Inter", sans-serif; font-style: italic;'>
             💭 移行したい...。けどやりかたが分からない。。。
         </p>
