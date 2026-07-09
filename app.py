@@ -49,12 +49,11 @@ st.markdown("""
         font-size: 1.8rem;
         font-weight: 850;
         color: #1E293B;
-        margin-top: 2.5rem;
         margin-bottom: 0.5rem;
         text-align: center;
     }
     .cta-subtitle {
-        font-size: 1rem;
+        font-size: 1.1rem;
         color: #64748B;
         margin-bottom: 1.5rem;
         text-align: center;
@@ -289,10 +288,10 @@ else:
 
 if not st.session_state.diagnosed:
     # --- State A: Waiting for Diagnosis Button Click ---
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    st.info("💡 **使い方**: 左側のサイドバーで「UiPath稼遊規模」および「移行対象ロボット数」を設定し、以下の「診断を実行」ボタンをクリックしてください。")
+    st.markdown("<br><br><br>", unsafe_allow_html=True)
+    st.info("💡 **使い方**: 左側のサイドバーで「UiPath稼働規模」および「移行対象ロボット数」を設定し、以下の「診断を実行」ボタンをクリックしてください。")
     
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("<br><br>", unsafe_allow_html=True)
     col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
     with col_btn2:
         # Styled primary button to trigger diagnosis
@@ -315,6 +314,7 @@ if not st.session_state.diagnosed:
 else:
     # --- State B: Display Diagnosis Results ---
     st.caption("ℹ️ サイドバーの数値を変更すると、結果がリセットされます。")
+    st.markdown("<br>", unsafe_allow_html=True)
     
     # 2-Column layout for 3-Year License Costs
     col1, col2 = st.columns(2)
@@ -333,7 +333,7 @@ else:
         </div>
         """, unsafe_allow_html=True)
 
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("<br><br>", unsafe_allow_html=True)
 
     # --- Display Savings Summary (Red highlights if > 500,000 Yen) ---
     font_color = "#EF4444" if diff_3years_yen > 500000 else "#4F46E5"
@@ -349,6 +349,8 @@ else:
         <span style="font-size: 1.1rem; font-weight: 600; color: #64748B;">（年間ライセンス費用において {diff_annual:.1f}万円 のランニング削減効果）</span>
     </div>
     """, unsafe_allow_html=True)
+
+    st.markdown("<br><br><br>", unsafe_allow_html=True)
 
     # Create 2 Columns for Graph and Detailed Table
     graph_col, table_col = st.columns([3, 2])
@@ -413,10 +415,13 @@ else:
             hide_index=True
         )
 
+    st.markdown("<br><br><br>", unsafe_allow_html=True)
     st.markdown("---")
+    st.markdown("<br><br>", unsafe_allow_html=True)
 
     # --- Recommendation Section (Consulting lead-in) ---
     st.markdown("### 🤖 RPA診断君の選定・推奨診断")
+    st.markdown("<br>", unsafe_allow_html=True)
 
     col_rec1, col_rec2 = st.columns([1, 2])
 
@@ -440,8 +445,26 @@ else:
         # Display Dynamic Explanation Text (integrated warnings and cost-saving tips)
         st.write(urgency_desc)
 
+    # --- Empathy Lead Section (New Story transition) ---
+    st.markdown("<br><br><br><br><br>", unsafe_allow_html=True)
+    
+    st.markdown(f"""
+    <div style='text-align: center; padding: 2.5rem 0; border-top: 1px solid #F1F5F9; border-bottom: 1px solid #F1F5F9;'>
+        <p style='font-size: 1.6rem; font-weight: 800; color: #475569; margin-bottom: 1rem; font-family: "Outfit", "Inter", sans-serif; font-style: italic;'>
+            💭 移行したい...。けどやりかたが分からない。。。
+        </p>
+        <p style='font-size: 1.15rem; color: #8B5CF6; font-weight: 700; max-width: 800px; margin: 0 auto; line-height: 1.8;'>
+            そんなあなたに、移行プロジェクトの第一歩を確実にするための具体的なロードマップや<br>
+            失敗しないためのチェックポイントを凝縮した「<b>PowerAutomate移行ガイド</b>」を無料提供しています。
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("<br><br><br>", unsafe_allow_html=True)
+
     # --- Call To Action (Free Paper Download Form) ---
     # 📝 INCLUDED INSIDE ELSE BLOCK to prevent empty border rendering before diagnosis
+    # ❌ Outer div.cta-card removed to resolve HTML parsing bug (replaced by premium button styles)
     
     # Application Form
     if "download_ready" not in st.session_state:
@@ -449,7 +472,8 @@ else:
 
     if not st.session_state.download_ready:
         st.markdown("<div class='cta-title'>🎁 PowerAutomate移行ガイドをダウンロード</div>", unsafe_allow_html=True)
-        st.markdown("<div class='cta-subtitle'>UiPathからPower Automateへ安全に移行するためのステップや、失敗しやすいポイント、ライセンスコスト削減効果の実例をまとめた特別フリーペーパーをお届けします。</div>", unsafe_allow_html=True)
+        st.markdown("<div class='cta-subtitle'>簡単な情報を入力するだけで、安全な移行のステップや削減効果の実例をまとめた特別フリーペーパーをお手元に保存できます。</div>", unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
         
         with st.form("download_form"):
             col_f1, col_f2 = st.columns(2)
@@ -474,6 +498,7 @@ else:
         st.balloons()
         st.markdown("<div class='cta-title'>✅ ご登録ありがとうございました！</div>", unsafe_allow_html=True)
         st.markdown("<div class='cta-subtitle'>以下ボタンをクリックして、PowerAutomate移行ガイドを保存してください。</div>", unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
         
         # Construct Guide content dynamically based on parameters
         guide_content = f"""# Power Automate 移行成功ガイドブック
@@ -518,6 +543,7 @@ RPA移行推進チーム 特別編集
                 st.rerun()
 
 # --- Footer Section (Always displayed at the very bottom of the page) ---
+st.markdown("<br><br><br><br><br>", unsafe_allow_html=True)
 st.markdown("---")
 foot_col1, foot_col2, foot_col3 = st.columns(3)
 with foot_col1:
