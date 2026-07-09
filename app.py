@@ -5,7 +5,7 @@ import time
 
 # Page configuration
 st.set_page_config(
-    page_title="RPAライセンス料診断ツール",
+    page_title="RPAライセンス費用比較・PAD移行シミュレーター | 無料診断",
     page_icon="💸",
     layout="wide",
     initial_sidebar_state="expanded"
